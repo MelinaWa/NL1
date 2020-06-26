@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="NaturalLight.css">
+    <link href="roundslider.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dosis&display=swap" rel="stylesheet">
 
@@ -17,28 +18,50 @@
 
     <div class="container">
         <div class="app"></div>
-
         <h1>Welcome back to</h1>
         <h2>Natural Light.</h2>
 
-        <input type="checkbox">
-        <div class="slidecontainer"></div>
-        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-        <!--  <p>Value: <span id="demo"></span></p>-->
+
 
         <div class="circle"></div>
-        <!-- <div id="slider"></div> -->
+
+        <div id="roundslider1" class="roundslider"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+
+
+
+        <script src="roundslider.min.js"></script>
+        <script>
+            $("#roundslider1").roundSlider({
+                sliderType: "min-range",
+                value: 50,
+                radius: 123,
+                circleShape: "half-top",
+                showTooltip: false,
+
+
+
+            });
+        </script>
+
+        <div class="firstcircle"></div>
+
+        <div>
+            <script src="SliderInt.js"></script>
+            <input type="checkbox">
+            <div class="slidecontainer"></div>
+            <input type="range" min="1" max="100" value="50" class="firstslider" id="myRange">
+
+        </div>
+
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+
+
     </div>
-
-    <div id="roundslider1" class="roundslider"></div>
-
-
-    </div>
-    </div>
-
-
-    </div>
-
 
 
 
