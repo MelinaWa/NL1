@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script>
+    var Socket;
+
+    function init() {
+      Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+      Socket.onmessage = function(event){
+        document.getElementById("rxConsole").value += event.data;
+      }
+
+      if(localStorage.getItem('flag')=="true"){
+         document.getElementById("toggle").checked = true;
+         }
+      else{
+         document.getElementById("toggle").checked = false;}
+
+      document.getElementById("brightness").value = localStorage.getItem('br'); 
+      document.getElementById("temperature").value = localStorage.getItem('te');
+      
+    }
+
+    function sendText(){
+      Socket.send(document.getElementById("txBar").value);
+      document.getElementById("txBar").value = "";
+    }
+    function sendData(){
+      var b = document.getElementById("brightness").value;
+      var t = document.getElementById("temperature").value;
+      localStorage.setItem('br',document.getElementById("brightness").value);
+      localStorage.setItem('te',document.getElementById("temperature").value);
+
+      Socket.send("b"+ b + "t" + t + "e");
+    } 
+
+
+    function sendOnOff(){
+        if(document.getElementById('toggle').checked){
+            Socket.send("t");
+            localStorage.setItem('br',1023);
+            document.getElementById("brightness").value = 1023;
+            localStorage.setItem('flag',true);
+        }
+        else{
+            Socket.send("f");
+            localStorage.setItem('br',0);
+            document.getElementById("brightness").value = 0;
+            localStorage.setItem('flag',false);
+        }
+        sendData();
+    }
+
+  </script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis&display=swap" rel="stylesheet">
+    <title>Natural Light</title>
+
+
+</head>
+
+<style>
+.container {
+    width: 285px;
+    height: 740px;
+    margin: 0px auto;
+    margin-left: 10px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+div.app {
+    position: relative;
+    width: 285px;
+    height: 740px;
+    background: #F7F7F7;
+    margin-top: 30px;
+    z-index: -2;
+}
+
+* {
+    font-family: 'Dosis', sans-serif;
+}
+
+h1 {
+    color: #898989;
+    margin-top: -720px;
+    margin-left: 20px;
+    font-size: 24px;
+}
+
+h2 {
+    color: #64D2D4;
+    margin-top: -20px;
+    margin-left: 20px;
+}
+
+
+/* AN AUS Button */
+
+input[type="checkbox"] {
+    height: 85px;
+    width: 85px;
+    margin-left: 142.5px;
+    margin-top: 430px;
+    border-radius: 50%;
+    -webkit-appearance: none;
+    box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.5), 10px 10px 15px rgba(70, 70, 70, 0.12);
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+}
+
+input[type="checkbox"]:after {
+    font-family: 'FontAwesome';
+    font-weight: 10;
+    font-size: 26px;
+    content: '\f011';
+    color: #898989;
+}
+
+input[type="checkbox"]:checked {
+    box-shadow: inset -10px -10px 15px rgba(255, 255, 255, 5), inset 10px 10px 15px rgba(70, 70, 70, 0.12);
+}
+
+input[type="checkbox"]:checked:after {
+    color: #64D2D4;
+}
+
+
+/* Slider Helligkeit */
+
+.slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 60%;
+    margin-left: 58px;
+    margin-top: 200px;
+    height: 17px;
+    border-radius: 100px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+
+/* Kreis */
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: -5px -5px 20px rgba(206, 206, 206, 0.5), 10px 10px 15px rgba(70, 70, 70, 0.12);
+    cursor: pointer;
+}
+
+
+/* Slider RUND */
+
+.circle {
+    height: 200px;
+    width: 200px;
+    margin-left: 8%;
+    margin-top: -132px;
+    border-style: solid;
+    border-width: 20px;
+    border-color: #64D2D4;
+    border-radius: 50%;
+}
+</style>
+
+
+<body onload="javascript:init()">
+
+    <div class="container">
+      <div class="app"></div>
+      <h1>Welcome back to</h1>
+        <h2>Natural Light.</h2>
+
+        <input type="checkbox" id="toggle" onclick="sendOnOff()">
+        <div class="slidecontainer"></div>
+        <input type="range" min="0" max="1023" class="slider" id="brightness" oninput="sendData()">
+        <!--  <p>Value: <span id="demo"></span></p>-->
+
+        <div class="circle"></div> 
+        <div id="slider"></div>
+   
+
+    <div id="roundslider1" class="roundslider"></div>
+    
+    <div class="slidecontainer">
+  <input type="range" min="0" max="1023"  class="slider" id="temperature" oninput="sendData()">
+</div>
+
+
+    </div>
+    </div>
+
+
+    </div>  
+</body>
+</html>
